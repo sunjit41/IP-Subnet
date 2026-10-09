@@ -2,11 +2,11 @@ name: Publish to Microsoft Store
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main ] # Triggers automatically when you push code updates to main
 
 jobs:
   build-and-publish:
-    runs-runs-on: windows-latest
+    runs-on: windows-latest
 
     steps:
     - name: Checkout Code
@@ -20,15 +20,6 @@ jobs:
 
     - name: Restore NuGet Packages
       run: nuget restore IPSubnet.sln
-
-    # AUTOMATIC VERSION INCREMENT STEP
-    - name: Auto Increment Package Version
-      shell: pwsh
-      run: |
-        # This takes your base version (like 1.0.0) and swaps the last digit with the GitHub build number (e.g., 1.0.0.42)
-        [xml]$manifest = Get-Content .\IPSubnetPack\Package.appxmanifest
-        $manifest.Package.Identity.Version = "1.0.0.${{ github.run_number }}"
-        $manifest.Save(".\IPSubnetPack\Package.appxmanifest")
 
     - name: Install MSStore CLI
       run: dotnet tool install --global Microsoft.Store.CLI
