@@ -35,6 +35,7 @@ jobs:
         SUBMISSION_SECRET: ${{ secrets.AZURE_AD_SECRET }}
       run: |
         msstore reconfigure --clientId ${{ secrets.AZURE_AD_CLIENT_ID }} --tenantId ${{ secrets.AZURE_AD_TENANT_ID }} --clientSecret $env:SUBMISSION_SECRET --sellerId ${{ secrets.SELLER_ID }}
-        # FIXED: Isolate the absolute parent folder path string and hand it directly to the short parameter flag -i
-        $uploadFile = (Get-ChildItem -Path .\**\*_StoreUpload.msixupload, .\**\*_StoreUpload.appxupload | Select-Object -First 1)
-        msstore publish -i "$($uploadFile.DirectoryName)"
+        
+        # BULLETPROOF: Dynamically find the absolute path of the AppPackages directory to guarantee the CLI tool opens it successfully
+        $targetDir = (Get-ChildItem -Path .\**\AppPackages -Directory | Select-Object -First 1).FullName
+        msstore publish --appId 9NTR4840KOR6 --inputDirectory "$targetDir"
