@@ -21,8 +21,9 @@ jobs:
     - name: Restore NuGet Packages
       run: nuget restore IPSubnet.sln
 
-    - name: Install MSStore CLI
-      run: dotnet tool install --global microsoft.store.cli
+    # FIXED: Replaced manual tool install with official Microsoft Setup Action
+    - name: Setup Microsoft Store Developer CLI
+      uses: microsoft/setup-msstore-cli@v1
 
     - name: Build and Package App
       run: |
