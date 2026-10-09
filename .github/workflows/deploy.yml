@@ -35,5 +35,5 @@ jobs:
         SUBMISSION_SECRET: ${{ secrets.AZURE_AD_SECRET }}
       working-directory: ./IPSubnetPack
       run: |
-        # BULLETPROOF: Provide authentication keys explicitly and allow the CLI tool to read SellerId/ProductId directly from your local config file layout
+        # BULLETPROOF: Provide authentication keys explicitly. The CLI will now natively read sellerId/productId from your renamed msstore.json file
         msstore publish --inputDirectory ".\AppPackages" --clientId ${{ secrets.AZURE_AD_CLIENT_ID }} --tenantId ${{ secrets.AZURE_AD_TENANT_ID }} --clientSecret $env:SUBMISSION_SECRET
