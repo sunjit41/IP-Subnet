@@ -12,22 +12,24 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x' # Ensures the runner engine has the proper VS 2026 runtime assets
+
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Setup NuGet
-      uses: nuget/setup-nuget@v2
+    # FIXED: Replaced legacy nuget restore with modern dotnet restore targeting your platform architectures
+    - name: Restore Project Dependencies
+      run: dotnet restore IPSubnet.sln --runtime win-x86
 
-    - name: Restore NuGet Packages
-      run: nuget restore IPSubnet.sln
-
-    # FIXED: Replaced manual tool install with official Microsoft Setup Action
     - name: Setup Microsoft Store Developer CLI
       uses: microsoft/setup-msstore-cli@v1
 
     - name: Build and Package App
       run: |
-        msbuild IPSubnet.sln /p:Configuration=Release /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:AppxPackageSigningEnabled=false
+        msbuild IPSubnet.sln /p:Configuration=Release /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:AppxPackageSigningEnabled=false /p:RuntimeIdentifier=win-x86
 
     - name: Authenticate and Publish to Microsoft Store
       env:
