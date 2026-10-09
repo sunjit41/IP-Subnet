@@ -30,11 +30,10 @@ jobs:
       run: |
         msbuild IPSubnet.sln /p:Configuration=Release /p:Platform=x64 /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:AppxPackageSigningEnabled=false /p:RuntimeIdentifier=win-x64
         
+    # FIXED: Replaced custom file string parameters with the native --path argument pointing directly to the workspace root
     - name: Authenticate and Publish to Microsoft Store
       env:
         SUBMISSION_SECRET: ${{ secrets.AZURE_AD_SECRET }}
       run: |
         msstore reconfigure --clientId ${{ secrets.AZURE_AD_CLIENT_ID }} --tenantId ${{ secrets.AZURE_AD_TENANT_ID }} --clientSecret $env:SUBMISSION_SECRET --sellerId ${{ secrets.SELLER_ID }}
-        # FIXED: Explicitly fetch the build output upload file path and feed it directly into the inputDirectory parameter
-        $packagePath = (Get-ChildItem -Path .\**\*_StoreUpload.msixupload, .\**\*_StoreUpload.appxupload | Select-Object -First 1).FullName
-        msstore publish --inputDirectory $packagePath
+        msstore publish --path .
