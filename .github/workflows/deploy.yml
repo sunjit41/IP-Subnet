@@ -20,21 +20,20 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    # FIXED: Re-targeted to match your project's native x64 profile settings
     - name: Restore Project Dependencies
       run: dotnet restore IPSubnet.sln --runtime win-x64 /p:Platform=x64
 
     - name: Setup Microsoft Store Developer CLI
       uses: microsoft/setup-msstore-cli@v1
 
-    # FIXED: Enforced identical matching x64 compilation and bundling targets
     - name: Build and Package App
       run: |
         msbuild IPSubnet.sln /p:Configuration=Release /p:Platform=x64 /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:AppxPackageSigningEnabled=false /p:RuntimeIdentifier=win-x64
         
+    # FIXED: Updated syntax parameter flags to use short/camelCase arguments required by the MSStore CLI environment
     - name: Authenticate and Publish to Microsoft Store
       env:
         SUBMISSION_SECRET: ${{ secrets.AZURE_AD_SECRET }}
       run: |
-        msstore reconfigure --client-id ${{ secrets.AZURE_AD_CLIENT_ID }} --tenant-id ${{ secrets.AZURE_AD_TENANT_ID }} --client-secret $env:SUBMISSION_SECRET
+        msstore reconfigure --clientId ${{ secrets.AZURE_AD_CLIENT_ID }} --tenantId ${{ secrets.AZURE_AD_TENANT_ID }} --clientSecret $env:SUBMISSION_SECRET --sellerId ${{ secrets.SELLER_ID }}
         msstore publish --package-path (Get-ChildItem -Path .\**\*_StoreUpload.msixupload, .\**\*_StoreUpload.appxupload | Select-Object -First 1).FullName
