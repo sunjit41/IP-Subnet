@@ -22,7 +22,7 @@ jobs:
       run: nuget restore IPSubnet.sln
 
     - name: Install MSStore CLI
-      run: dotnet tool install --global Microsoft.Store.CLI
+      run: dotnet tool install --global microsoft.store.cli
 
     - name: Build and Package App
       run: |
