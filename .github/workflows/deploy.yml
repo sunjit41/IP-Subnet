@@ -1,0 +1,45 @@
+name: Publish to Microsoft Store
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-publish:
+    runs-runs-on: windows-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v2
+
+    - name: Restore NuGet Packages
+      run: nuget restore IPSubnet.sln
+
+    # AUTOMATIC VERSION INCREMENT STEP
+    - name: Auto Increment Package Version
+      shell: pwsh
+      run: |
+        # This takes your base version (like 1.0.0) and swaps the last digit with the GitHub build number (e.g., 1.0.0.42)
+        [xml]$manifest = Get-Content .\IPSubnetPack\Package.appxmanifest
+        $manifest.Package.Identity.Version = "1.0.0.${{ github.run_number }}"
+        $manifest.Save(".\IPSubnetPack\Package.appxmanifest")
+
+    - name: Install MSStore CLI
+      run: dotnet tool install --global Microsoft.Store.CLI
+
+    - name: Build and Package App
+      run: |
+        msbuild IPSubnet.sln /p:Configuration=Release /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:AppxPackageSigningEnabled=false
+
+    - name: Authenticate and Publish to Microsoft Store
+      env:
+        SUBMISSION_SECRET: ${{ secrets.AZURE_AD_SECRET }}
+      run: |
+        msstore reconfigure --client-id ${{ secrets.AZURE_AD_CLIENT_ID }} --tenant-id ${{ secrets.AZURE_AD_TENANT_ID }} --client-secret $env:SUBMISSION_SECRET
+        msstore publish --package-path (Get-ChildItem -Path .\**\*_StoreUpload.msixupload, .\**\*_StoreUpload.appxupload | Select-Object -First 1).FullName
