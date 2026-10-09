@@ -15,22 +15,23 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '10.0.x' # Ensures the runner engine has the proper VS 2026 runtime assets
+        dotnet-version: '10.0.x' # Matches your modern Visual Studio 2026 project dependencies
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    # FIXED: Replaced legacy nuget restore with modern dotnet restore targeting your platform architectures
+    # FIXED: Re-targeted to match your project's native x64 profile settings
     - name: Restore Project Dependencies
-      run: dotnet restore IPSubnet.sln --runtime win-x86
+      run: dotnet restore IPSubnet.sln --runtime win-x64 /p:Platform=x64
 
     - name: Setup Microsoft Store Developer CLI
       uses: microsoft/setup-msstore-cli@v1
 
+    # FIXED: Enforced identical matching x64 compilation and bundling targets
     - name: Build and Package App
       run: |
-        msbuild IPSubnet.sln /p:Configuration=Release /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:AppxPackageSigningEnabled=false /p:RuntimeIdentifier=win-x86
-
+        msbuild IPSubnet.sln /p:Configuration=Release /p:Platform=x64 /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:AppxPackageSigningEnabled=false /p:RuntimeIdentifier=win-x64
+        
     - name: Authenticate and Publish to Microsoft Store
       env:
         SUBMISSION_SECRET: ${{ secrets.AZURE_AD_SECRET }}
