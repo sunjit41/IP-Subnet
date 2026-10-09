@@ -8,8 +8,8 @@
 
   <Identity
     Name="Sunjit41.IPSubnet"
-    Publisher="CN=sunjit41"
-    Version="1.0.9.0" />
+    Publisher="CN=2D63E092-ACE1-48AD-938B-5D0D46862346"
+    Version="1.0.10.0" />
 
   <Properties>
     <DisplayName>IP Subnet</DisplayName>
