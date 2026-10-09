@@ -39,7 +39,7 @@ This repository is **source-available for educational purposes only**.
 ### Installation & Running
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git](https://github.com/sunjit41/IP-Subnet.git)
+   git clone [https://github.com/sunjit41/IP-Subnet.git]
    ```
 2. Open the solution file (`.sln`) in Visual Studio.
 3. Build and Run the project (`F5`).
