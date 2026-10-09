@@ -1,13 +1,13 @@
+# IP Subnet (Classfull) Calculator
+
+A robust Windows Forms application built with **C#** and **.NET** for calculating IPv4 Classful Subnetting. This tool simplifies networking tasks by instantly determining IP classes, subnets, hosts, binary values, and CIDR masks, along with generating exportable HTML subnetting reports.
+
+---
 ## 🛑 Usage & Licensing Notice
 This repository is **source-available for educational purposes only**. 
 
 * **What you CAN do:** Feel free to clone this repository, run it locally, explore the architecture, and use it to learn or evaluate my coding style.
 * **What you CANNOT do:** You are strictly prohibited from re-distributing, republishing, or commercializing this software or its source code anywhere else. 
-
-# IP Subnet (Classfull) Calculator
-
-A robust Windows Forms application built with **C#** and **.NET** for calculating IPv4 Classful Subnetting. This tool simplifies networking tasks by instantly determining IP classes, subnets, hosts, binary values, and CIDR masks, along with generating exportable HTML subnetting reports.
-
 ---
 
 ## 🚀 Features
